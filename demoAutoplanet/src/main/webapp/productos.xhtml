@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head>
+<body>
+
+<h:form id="frm">
+		<p:growl id="men" showDetail="true" />
+				
+				<p:toolbar>
+					<f:facet name="left">
+					
+						<p:commandButton value="Guardar" icon="ui-icon-disk"
+							process="@this :frm:panGriPro"
+							actionListener="#{productoController.saveProducto()}"
+							update=":frm:men :frm:datTabPro :frm:panGriPro" />
+						
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							process="@this"
+							actionListener="#{productoController.editProducto()}"
+							update=":frm:men :frm:panGriPro" />
+						
+					</f:facet>
+				</p:toolbar>
+				<p:panelGrid id="panGriPro" columns="2" style="width:100%">
+						
+					<p:outputLabel value="Nombre:" for="txtNomPro" />
+					<p:inputText id="txtNomPro" required="true" maxlength="45"
+						value="#{productoController.producto.nombre}" />
+						
+					<p:outputLabel value="Categoria:" for="cmbCate" />
+					<p:selectOneMenu id="cmbCate" required="true" effect="drop"
+						value="#{productoController.categoria}"
+						converter="omnifaces.SelectItemsConverter">
+						<f:selectItem itemLabel="Seleccione una opción"
+							noSelectionOption="true" itemValue="" />
+						<f:selectItems value="#{productoController.categorias}"
+							var="Cate" itemLabel="#{Cate.nombre}" itemValue="#{Cate}" />
+					</p:selectOneMenu>
+						
+					<p:outputLabel value="Precio:" for="spiPrePro" />
+					<p:inputText id="spiPrePro" 
+						value="#{productoController.producto.precio}" />
+						
+					<p:outputLabel value="Descripcion:" for="spiDespPro" />
+					<p:inputText id="spiDespPro" 
+						value="#{productoController.producto.descripcion}" />
+						
+					<p:outputLabel value="Proveedor:" for="cmbProv" />
+					<p:selectOneMenu id="cmbProv" required="true" effect="drop"
+						value="#{productoController.proveedor}"
+						converter="omnifaces.SelectItemsConverter">
+						<f:selectItem itemLabel="Seleccione una opción"
+							noSelectionOption="true" itemValue="" />
+						<f:selectItems value="#{productoController.proveedores}"
+							var="Prov" itemLabel="#{Prov.nombre}" itemValue="#{Prov}" />
+					</p:selectOneMenu>
+						
+					<p:outputLabel value="Marca:" for="spiMarca" />
+					<p:inputText id="spiMarca" 
+						value="#{productoController.producto.marca}" />
+						
+				</p:panelGrid>
+				<br></br>
+				
+				
+				<p:dataTable id="datTabPro"
+					emptyMessage="No existen productos registrados"
+					value="#{productoController.productos}" var="pro" paginator="true"
+					rows="10" selectionMode="single" rowKey="#{pro.id}">
+					<f:facet name="header">
+						<p:outputLabel value="Lista de Productos" />
+					</f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{productoController.selecProducto}" />
+					<p:column headerText="id">
+						<p:outputLabel value="#{pro.id}" />
+					</p:column>
+					
+					<p:column headerText="Nombre">
+						<p:outputLabel value="#{pro.nombre}" />
+					</p:column>
+					
+					<p:column headerText="Precio">
+						<p:outputLabel value="#{pro.precio}" />
+					</p:column>
+					
+					<p:column headerText="marca">
+						<p:outputLabel value="#{pro.marca}" />
+					</p:column>
+					
+					<p:column headerText="Proveedor">
+						<p:outputLabel value="#{pro.proveedor.nombre}" />
+					</p:column>
+				</p:dataTable>
+				
+			</h:form>
+
+</body>
+</html>

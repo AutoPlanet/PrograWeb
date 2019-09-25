@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body>
+
+<h:form id="frm">
+		<p:growl id="men" showDetail="true" />
+				
+				<p:toolbar>
+					<f:facet name="left">
+					
+						<p:commandButton value="Guardar" icon="ui-icon-disk"
+							process="@this :frm:panGriAuto"
+							actionListener="#{autoController.saveAuto()}"
+							update=":frm:men :frm:datTabAuto :frm:panGriAuto" />
+						
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							process="@this"
+							actionListener="#{autoController.editAuto()}"
+							update=":frm:men :frm:panGriAuto" />
+						
+					</f:facet>
+				</p:toolbar>
+				<p:panelGrid id="panGriAuto" columns="2" style="width:100%">
+						
+					<p:outputLabel value="Placa:" for="spiPlacaAuto" />
+					<p:inputText id="spiPlacaAuto" 
+						value="#{autoController.auto.placa}" />
+						
+					<p:outputLabel value="Modelo:" for="spiModeloAuto" />
+					<p:inputText id="spiModeloAuto" 
+						value="#{autoController.auto.modelo}" />
+						
+					<p:outputLabel value="Cliente:" for="cmbCliente" />
+					<p:selectOneMenu id="cmbCliente" required="true" effect="drop"
+						value="#{autoController.cliente}"
+						converter="omnifaces.SelectItemsConverter">
+						<f:selectItem itemLabel="Seleccione una opción"
+							noSelectionOption="true" itemValue="" />
+						<f:selectItems value="#{autoController.clientes}"
+							var="Cli" itemLabel="#{Cli.nombre}" itemValue="#{Cli}" />
+					</p:selectOneMenu>
+
+					
+					<p:outputLabel value="Anio:" for="spiAnio" />
+					<p:inputText id="spiAnio" 
+						value="#{autoController.auto.anio}" />
+						
+					<p:outputLabel value="Color:" for="spiColor" />
+					<p:inputText id="spiColor" 
+						value="#{autoController.auto.color}" />
+						
+				
+					<p:outputLabel value="Marca:" for="spiMarca" />
+					<p:inputText id="spiMarca" 
+						value="#{autoController.auto.marca}" />
+						 
+						
+				</p:panelGrid>
+				<br></br>
+				
+				
+				<p:dataTable id="datTabAuto"
+					emptyMessage="No existen autos registrados"
+					value="#{autoController.autos}" var="auto" paginator="true"
+					rows="10" selectionMode="single" rowKey="#{auto.id}">
+					<f:facet name="header">
+						<p:outputLabel value="Lista de Autos" />
+					</f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{autoController.selecAuto}" />
+					<p:column headerText="id">
+						<p:outputLabel value="#{auto.id}" />
+					</p:column>
+					
+					<p:column headerText="Placa">
+						<p:outputLabel value="#{auto.placa}" />
+					</p:column>
+					
+					<p:column headerText="Marca">
+						<p:outputLabel value="#{auto.marca}" />
+					</p:column>
+					
+					<p:column headerText="Modelo">
+						<p:outputLabel value="#{auto.modelo}" />
+					</p:column>
+					
+					<p:column headerText="Anio">
+						<p:outputLabel value="#{auto.anio}" />
+					</p:column>
+				</p:dataTable>
+				
+			</h:form>
+
+</body>
+</html>

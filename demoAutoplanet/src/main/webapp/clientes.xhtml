@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body>
+
+<h:form id="frm">
+		<p:growl id="men" showDetail="true" />
+				
+				<p:toolbar>
+					<f:facet name="left">
+								
+						<p:commandButton value="Guardar" icon="ui-icon-disk"
+							process="@this :frm:panGriCliente"
+							actionListener="#{clienteController.saveCliente()}"
+							update=":frm:men :frm:datTabCliente :frm:panGriCliente" />
+							
+							
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							process="@this"
+							actionListener="#{clienteController.editCliente()}"
+							update=":frm:men :frm:datTabCliente :frm:panGriCliente" />
+					</f:facet>
+				</p:toolbar>
+				
+				<p:panelGrid id="panGriCliente" columns="2" style="width:100%">
+					<p:outputLabel value="Nombre:" for="txtName" />
+					<p:inputText id="txtName" required="true" maxlength="45"
+						value="#{clienteController.cliente.nombre}" />
+						
+					<p:outputLabel value="DNI:" for="txtDNI" />
+					<p:inputText id="txtDNI" required="true" maxlength="45"
+						value="#{clienteController.cliente.dni}" />
+				
+					<p:outputLabel value="Direccion:" for="txtDireccion" />
+					<p:inputText id="txtDireccion" required="true" maxlength="45"
+						value="#{clienteController.cliente.direccion}" />
+						
+					<p:outputLabel value="Telefono:" for="txtTelefono" />
+					<p:inputText id="txtTelefono" required="true" maxlength="45"
+						value="#{clienteController.cliente.telefono}" />
+					
+										<!-- 	
+					
+					<p:outputLabel value="Pais:" for="txtPais" />
+					<p:inputText id="txtPais" required="true" maxlength="45"
+						value="#{clienteController.cliente.pais}" />
+					 -->	
+					
+					
+					<h:outputText id="display" />
+					
+					<p:outputLabel for="cboPais" value="Pais" />
+					<p:selectOneMenu id="cboPais"
+						value="#{clienteController.cliente.pais}" filter="true"
+						filterMatchMode="contains" required="true">
+						<f:selectItem noSelectionOption="true" value="#{null}"
+							itemLabel="--Seleccione--" />
+						<f:selectItems value="#{country.countrys}" var="c"
+							itemLabel="#{c}" itemValue="#{c}" />
+						<p:message for="cboPais" display="text" />
+					</p:selectOneMenu>
+
+						
+				</p:panelGrid>
+				<br></br>
+				
+
+				<p:dataTable id="datTabCliente"
+					emptyMessage="No existen clientes registrados"
+					value="#{clienteController.clientes}" var="cliente"
+					paginator="true" rows="10" selectionMode="single"
+					rowKey="#{cliente.id}">
+					
+					<f:facet name="header">
+						<p:outputLabel value="Lista de Cliente" />
+					</f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{clienteController.selectCliente}" />
+
+					<p:column headerText="Id">
+						<p:outputLabel value="#{cliente.id}" />
+					</p:column>
+					
+					<p:column headerText="Nombre">
+						<p:outputLabel value="#{cliente.nombre}" />
+					</p:column>
+					
+					<p:column headerText="DNI">
+						<p:outputLabel value="#{cliente.dni}" />
+					</p:column>
+					
+					<p:column headerText="Direccion">
+						<p:outputLabel value="#{cliente.direccion}" />
+					</p:column>
+					
+					<p:column headerText="Telefono">
+						<p:outputLabel value="#{cliente.telefono}" />
+					</p:column>
+					
+					<p:column headerText="Pais">
+						<p:outputLabel value="#{cliente.pais}" />
+					</p:column>
+					
+				</p:dataTable>		
+			</h:form>
+
+</body>
+</html>

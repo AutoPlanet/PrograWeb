@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body>
+
+<h:form id="frm">
+		<p:growl id="men" showDetail="true" />
+				
+				<p:toolbar>
+					<f:facet name="left">
+
+						<p:commandButton value="Guardar" icon="icon_save"
+							process="@this :frm:panGriCabCita"
+							actionListener="#{citaController.saveCita()}"
+							update=":frm:men :frm:panGriCabCita" />
+					</f:facet>
+
+					<f:facet name="left">
+						<p:outputLabel value="Administración de Citas" />
+					</f:facet>
+
+				</p:toolbar>
+				<br></br>
+
+				<p:panelGrid id="panGriCabCita" columns="4" style="width:100%">
+
+					<p:outputLabel value="Fecha:" />
+					<p:calendar id="calFecFac"
+						value="#{citaController.cita.createAt}" />
+
+					<p:outputLabel for="txtIdeCli" value="Dni Cliente:" />
+					<h:panelGroup>
+						<p:inputText id="txtIdeCli" maxlength="13" required="true"
+							value="#{citaController.cliente.dni}" />
+						<p:commandButton icon="ui-icon-search"
+							process="@this :frm:txtIdeCli"
+							actionListener="#{citaController.findClienteByDni()}"
+							update=":frm:txtNomCli
+							:frm:txaDirCli 
+							:frm:men" />
+					</h:panelGroup>
+
+					<p:outputLabel value="Nombres:" />
+					<p:inputText id="txtNomCli" readonly="true"
+						value="#{citaController.cliente.nombre}" />
+						
+					<p:outputLabel value="Dirección" />
+					<p:inputTextarea id="txaDirCli" readonly="true"
+						value="#{citaController.cliente.direccion}" />
+				</p:panelGrid>
+
+				<br></br>
+
+				<p:toolbar>
+					<f:facet name="right">
+						<p:commandButton value="Añadir" icon="ui-icon-plus"
+							onclick="PF('diaAnaServicio').show();" />
+
+					</f:facet>
+				</p:toolbar>
+
+				<p:dataTable id="datTabServicio"
+					value="#{citaController.servicios}" var="detOr"
+					selectionMode="single" rowKey="#{detOr.id}">
+					<p:ajax event="rowSelect"
+						listener="#{citaController.citaSel}" />
+					
+					<p:column headerText="Producto">
+						<p:outputLabel value="#{detOr.producto.nombre}" />
+					</p:column>
+					<p:column headerText="Cantidad">
+						<p:outputLabel value="#{detOr.cantidad}" />
+					</p:column>
+					<p:column headerText="Precio">
+						<p:outputLabel value="#{detOr.precio}" />
+					</p:column>
+					<p:column headerText="SubTotal">
+						<p:outputLabel value="#{detOr.importe}" />
+					</p:column>
+				</p:dataTable>
+
+
+				<p:dialog widgetVar="diaAnaServicio" showEffect="explode"
+					hideEffect="bounce" header="Añadir Detalle" width="450"
+					height="400">
+					<p:toolbar>
+						<f:facet name="right">
+							<p:commandButton value="Anadir"
+								process="@this :frm:panGriAnaServicio"
+								actionListener="#{citaController.addProductoToDetail()}"
+								update=":frm:panGriAnaServicio :frm:datTabServicio :frm:men"
+								oncomplete="PF('diaAnaServicio').hide();" />
+							<p:commandButton value="Cancelar" process="@this"
+								update=":frm:panGriAnaServicio"
+								oncomplete="PF('diaAnaServicio').hide();" />
+						</f:facet>
+					</p:toolbar>
+					<br />
+
+					<p:panelGrid id="panGriAnaServicio" columns="2" style="width:100%">
+
+						<p:outputLabel value="Producto:" for="atxtProServicio" />
+
+						<p:selectOneMenu id="atxtProServicio" required="true"
+							effect="drop" value="#{citaController.producto}"
+							converter="omnifaces.SelectItemsConverter" filter="true"
+							filterMatchMode="contains">
+							<f:selectItem itemLabel="Seleccione una opción"
+								noSelectionOption="true" itemValue="" />
+							<f:selectItems value="#{citaController.productos}" var="pro"
+								itemLabel="#{pro.nombre}" itemValue="#{pro}" />
+							<p:ajax event="itemSelect"
+								listener="#{citaController.updatePrecioProducto}"
+								update="frm:spiPreProServicio" />
+						</p:selectOneMenu>
+
+						<p:outputLabel value="Precio:" for="spiPreProServicio" />
+						<p:inputText id="spiPreProServicio" readonly="true"
+							value="#{citaController.servicio.precio}" />
+						<p:outputLabel value="Cantidad:" for="spiCanServicio" />
+
+
+						<p:inputText id="spiCanServicio" required="true"
+							value="#{citaController.servicio.cantidad}">
+							
+							<p:ajax event="keyup"
+								listener="#{citaController.calculateImporteDetail()}"
+								update=":frm:spiTotServicio" />
+						</p:inputText>
+
+
+
+						<p:outputLabel value="Total:" for="spiTotServicio" />
+						<p:spinner id="spiTotServicio" readonly="true"
+							value="#{citaController.servicio.importe}" />
+
+					</p:panelGrid>
+				</p:dialog>
+
+			</h:form>
+
+
+</body>
+</html>

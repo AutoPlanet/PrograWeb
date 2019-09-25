@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<body>
+
+<h:form id="frm">
+		<p:growl id="men" showDetail="true" />
+				
+				<p:toolbar>
+					<f:facet name="left">
+								
+						<p:commandButton value="Guardar" icon="ui-icon-disk"
+							process="@this :frm:panGriProveedor"
+							actionListener="#{proveedorController.saveProveedor()}"
+							update=":frm:men :frm:datTabProveedor :frm:panGriProveedor" />
+							
+							
+						<p:commandButton value="Editar" icon="ui-icon-pencil"
+							process="@this"
+							actionListener="#{proveedorController.editProveedor()}"
+							update=":frm:men :frm:datTabProveedor :frm:panGriProveedor" />
+					</f:facet>
+				</p:toolbar>
+				
+				<p:panelGrid id="panGriProveedor" columns="2" style="width:100%">
+					<p:outputLabel value="Nombre:" for="txtName" />
+					<p:inputText id="txtName" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.nombre}" />
+						
+					<p:outputLabel value="RUC:" for="txtRUC" />
+					<p:inputText id="txtRUC" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.ruc}" />
+						
+					<p:outputLabel value="Telefono:" for="txtTelefono" />
+					<p:inputText id="txtTelefono" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.telefono}" />
+				
+					<p:outputLabel value="Direccion:" for="txtDireccion" />
+					<p:inputText id="txtDireccion" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.direccion}" />
+					
+					<p:outputLabel value="Ciudad:" for="txtCiudad" />
+					<p:inputText id="txtCiudad" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.ciudad}" />
+									
+					<p:outputLabel value="Distrito:" for="txtDistrito" />
+					<p:inputText id="txtDistrito" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.distrito}" />	
+						
+					<!-- 	
+					
+					<p:outputLabel value="Pais:" for="txtPais" />
+					<p:inputText id="txtPais" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.pais}" />
+					 -->	
+						
+						
+					
+					<h:outputText id="display" />
+					
+					<p:outputLabel for="cboPais" value="Pais" />
+					<p:selectOneMenu id="cboPais"
+						value="#{proveedorController.proveedor.pais}" filter="true"
+						filterMatchMode="contains" required="true">
+						<f:selectItem noSelectionOption="true" value="#{null}"
+							itemLabel="--Seleccione--" />
+						<f:selectItems value="#{country.countrys}" var="c"
+							itemLabel="#{c}" itemValue="#{c}" />
+						<p:message for="cboPais" display="text" />
+					</p:selectOneMenu>
+										
+					
+					
+						
+					<p:outputLabel value="Email:" for="txtEmail" />
+					<p:inputText id="txtEmail" required="true" maxlength="45"
+						value="#{proveedorController.proveedor.email}" />
+						
+						
+						
+				</p:panelGrid>
+				<br></br>
+				
+
+				<p:dataTable id="datTabProveedor"
+					emptyMessage="No existen proveedores registrados"
+					value="#{proveedorController.proveedores}" var="proveedor"
+					paginator="true" rows="10" selectionMode="single"
+					rowKey="#{proveedor.id}">
+					
+					<f:facet name="header">
+						<p:outputLabel value="Lista de Proveedor" />
+					</f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{proveedorController.selecProveedor}" />
+
+					<p:column headerText="Id">
+						<p:outputLabel value="#{proveedor.id}" />
+					</p:column>
+					
+					<p:column headerText="Nombre">
+						<p:outputLabel value="#{proveedor.nombre}" />
+					</p:column>
+					
+					<p:column headerText="Ciudad">
+						<p:outputLabel value="#{proveedor.ciudad}" />
+					</p:column>
+					
+					<p:column headerText="Pais">
+						<p:outputLabel value="#{proveedor.pais}" />
+					</p:column>
+					
+					<p:column headerText="telefono">
+						<p:outputLabel value="#{proveedor.telefono}" />
+					</p:column>
+					
+					<p:column headerText="email">
+						<p:outputLabel value="#{proveedor.email}" />
+					</p:column>
+					
+				</p:dataTable>
+			</h:form>
+
+</body>
+</html>
